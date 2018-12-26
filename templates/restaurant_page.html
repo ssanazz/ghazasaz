@@ -1,0 +1,139 @@
+{% extends 'HomePage.html' %}
+{% load templatetags %}
+
+{% block title %}{{ restaurant.name }}{% endblock %}
+
+{% block page %}
+    <link href="../static/Css/restaurant_page.css" rel="stylesheet" type="text/css">
+    <script src="../static/Js/restaurant_page.js"></script>
+    <div class="container-fluid text-right">
+        <div class="row mt-4 mx-4">
+            <div class="card col-12">
+                <div class="card-header">
+                    {% if r.image %}
+                        <img src="{{ restaurant.image }}" class="rounded-circle float-right">
+                    {% else %}
+                        <img src="../static/picture/restaurant_default1.jpg" class="rounded-circle float-right"
+                             style="height: 140px; width: 140px">
+                    {% endif %}
+                    <p class="card-text float-right mt-5 mr-5">{{ restaurant.name }}</p>
+                    <div class="float-left mt-5">
+                        {% for i in "xxxxx" %}
+                            {% if forloop.counter <= restaurant.rate %}
+                                <span class="fas fa-star fa-xs"></span>
+                            {% else %}
+                                <span class="far fa-star fa-xs"></span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <br><br><br><span class="card-text float-right mr-4">آدرس: </span><span
+                        class="card-text">{{ restaurant.address }}</span>
+                    {#                                            <h5 class="card-title">Special title treatment</h5>#}
+                    {#                        <a href="#" class="btn btn-primary">Go somewhere</a>#}
+                </div>
+            </div>
+        <ul class="nav justify-content-end pr-0 nav-tabs mt-2 mb-0 col-12">
+          <li class="nav-item">
+            <a class="nav-link active title text-dark" href="#">منو</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link title text-dark" href="#">صورتحساب</a>
+          </li>
+        </ul>
+            <div class="card col-12 mt-0 ml-5 float-right">
+                {#                <div class="card-header"></div>#}
+                <div class="card-body px-5">
+                    <div class="row mr-5">
+                        {% for f in foods %}
+                            <div class="card col-2 mr-3 mt-3 border-secondary">
+                                {#                                <a class="fa fa-pencil" data-toggle="modal" href="{% url 'item_edit' item.id %}"#}
+                                {#                                   data-target="#modal{{ food.pk }}" title="edit item" data-tooltip></a>#}
+                                {#                                href="{% url 'ingredient_show' foo=f %}"#}
+                                <a class="card-link text-dark" data-toggle="modal" data-target="#Modal-{{ f.pk }}"
+                                   data-whatever="@getbootstrap" onclick="{% define f.pk as key %}">
+                                    <div class="card-header bg-transparent mr-0 p-0 text-center">{{ f.name }}</div>
+                                    {% if f.image %}
+                                        <img class="card-img-top" src="{{ f.image }}">
+                                    {% else %}
+                                        <img class="card-img-top d-block" src="../static/picture/food_default.jpg">
+                                    {% endif %}
+                                    <div class="card-footer p-0">
+                                        <small class="text-muted text-left">{{ f.rate }}</small>
+                                        <small class="text-muted text-right">{{ f.price }}</small>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    {% block modal %}
+                        {% for food in foods %}
+                            <div class="modal fade" id="Modal-{{ food.pk }}" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">مخلفات اضافی خود را انتخاب
+                                                کنید</h5>
+                                            <button type="button" class="close ml-0" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                {% for i in food.ingredients_set.all %}
+                                                    <div class="col-3">
+                                                        <a class="btn fas fa-plus fa-1x mr-4"></a>
+                                                        <p class="bg-transparent text-center p-1 mt-1">
+                                                            {{ i.name }}</p>
+                                                        <a class="btn fas fa-minus fa-1x mr-4"></a><br>
+                                                        {% for q in "xxx" %}
+                                                            {% if forloop.counter <= i.rate %}
+                                                                <span class="fas fa-star fa-xm text-right"></span>
+                                                            {% else %}
+                                                                <span class="far fa-star fa-sm text-right"></span>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    <small class="text-muted text-right mr-4">{{ i.price }}</small>
+                                                        {#                                                        </a>#}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary ml-2">Send message</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+<script>
+    {% for food in foods %}
+        {% for ingredient in food.ingredients_set.all %}
+            $('#Modal-{{ food.pk }}').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var recipient = button.data('whatever');// Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                modal.find('.modal-title').text('New message to ' + recipient);
+                modal.find('.modal-body input').val(recipient)
+            });
+
+
+
+        {% endfor %}
+    {% endfor %}
+
+</script>

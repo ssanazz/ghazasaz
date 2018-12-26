@@ -1,0 +1,19 @@
+{% load widget_tweaks %}
+
+{% for field in form %}
+        <div class="form-group">
+            <h5>{{ field.label_tag }}</h5>
+            <!-- code suppressed for brevity -->
+            {{ field }}
+            {% if field.help_text %}
+                <small class="form-text text-muted">
+                    <h5>{{ field.help_text|safe }}</h5>  <!-- new code here -->
+                </small>
+            {% endif %}
+            {% if form.errors %}
+                {% for error in field.errors %}
+                    <h5 class="text-danger"> {{ error }} </h5>
+                {% endfor %}
+            {% endif %}
+        </div>
+{% endfor %}

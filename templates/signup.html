@@ -1,0 +1,20 @@
+{% extends 'HomePage.html' %}
+{% load templatetags %}
+
+{% block title %}ثبت نام{% endblock %}
+
+{% block page %}
+    <div class="container text-right">
+        <div class="row mt-4 mx-4">
+            <div class="card col-12">
+                <div class="card-header"></div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">به عنوان چه کسی میخواهید ثبت نام کنید؟</h5>
+{#                    <p class="card-text">}</p>#}
+                    <a href="{% url 'signup_restaurant' %}" class="btn btn-dark">رستوران</a>
+                    <a href="{% url 'signup_user' %}" class="btn btn-dark">کاربر</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'HomePage.html' %}
+
+{% block page %}
+    <div class="row my-5 mx-5">
+    <div class="col-9" style="margin-right: 12%;">
+    <div class="card text-right">
+        <div class="card-header bg-dark text-light">
+            <h3 class="title" style="font-size: 22px!important;">فرم ثبت نام {{ type }}</h3>
+        </div>
+        <div class="card-body">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% include 'includes/form.html' %}
+          <button type="submit" class="btn btn-primary">Create an account</button>
+        </form>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+{% endblock %}

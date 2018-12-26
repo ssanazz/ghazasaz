@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+    <link href="{% static 'Css/HomePage.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'Css/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet">
+    <script src="{% static 'Js/jquery-3.3.1.slim.min.js' %}"></script>
+    <script src="{% static 'Js/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Js/js/bootstrap.js' %}"></script>
+    <script src="{% static 'Js/restaurant_page.js' %}"></script>
+    {#    <script src="{% static 'Js/js/j' %}"></script>#}
+    <title>{% block title %}Title{% endblock %}</title>
+</head>
+<body class="n_text">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler pl-0 ml-0" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand site_title ml-auto mr-0" href="{% url 'HomePage' %}">غذاساز</a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            {#            <li class="nav-item active">#}
+            {#                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>#}
+            {#            </li>#}
+            {% if user.username %}
+                <a class="nav-link" href="#"> خوش آمدید{{ user.first_name }}{{ user.city }}</a>
+                 <a class="nav-link" href="{% url 'signout' %}">خروج</a>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">ثبت نام کنید</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">وارد شوید</a>
+            </li>
+            {% endif %}
+        </ul>
+        <!--<form class="form-inline my-2 my-lg-0">-->
+        <!--<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+        <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+        <!--</form>-->
+    </div>
+</nav>
+{% block page %}
+    <div class="container-fluid">
+        <!--<div class="row">-->
+        <div class="row mx-5 px-3">
+            <div class="col-12">
+                <h2 class="text-center title mt-lg-5">جست و جو</h2>
+                <p class="text-center">میتونی اینجا محلی که هستی یا اسم رستورانی که میخوای رو سرچ کنی.</p>
+                <form class="form">
+                    <div class="form-row">
+                        <div class="col-7">
+                            <input type="text" class="form-control" placeholder="محله">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control" placeholder="رستوران">
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn bg-dark text-light my-2 my-sm-0">جست و جو</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% block result %}
+            <div class="row mr-lg-5 pr-5">
+                <h2 class="title mt-5 col-12" style="left:45%;">رستوران های پرطرفدار</h2>
+                {#<div class="card-deck mt-4 mx-2 mb-lg-5">#}
+                {% for r in restaurants %}
+                    <div class="card col-2 mr-lg-3 mb-2">
+                        <a class="card-link text-dark" href="{% url 'restaurnat_page' pk=r.pk name=r.name %}">
+                            <div class="card-header bg-transparent mr-0 p-0 text-center">{{ r.name }}</div>
+                            {% if r.image %}
+                                <div class="card-img-top" style="background-image: {{ r.image }}">
+                                    <p class="card-text text-center">{{ r.address }}</p>
+                                </div>
+                            {% else %}
+                                <div class="card-img-top d-block"
+                                     style="background-image: url(../static/picture/restaurant_default1.jpg)">
+                                    <p class="card-text text-center">{{ r.address }}</p>
+                                </div>
+                            {% endif %}
+                            <div class="card-footer p-0">
+                                {% for i in "xxxxx" %}
+                                    {% if forloop.counter <= r.rate %}
+                                        <span class="fas fa-star fa-xs"></span>
+                                    {% else %}
+                                        <span class="far fa-star fa-xs"></span>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endblock %}
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="close text-left" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>
